@@ -2,14 +2,13 @@ import axios from 'axios';
 
 import { User } from '@prisma/client';
 
-import { PrismaService, kcAdminClient } from 'src/config';
+import { PrismaService } from 'src/config';
 import { KEYCLOAK_APIS, HTTP_CONTENT_TYPES } from 'src/config';
 import { LoginParams } from 'src/entities';
 
 import {
   Injectable,
   ForbiddenException,
-  BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
 
@@ -121,45 +120,36 @@ export class SessionService {
     await this.logoutToKeycloak(bodyParams);
   }
 
-  private async validateRefreshToken(credentials: URLSearchParams) {
-    try {
-      const config = {
-        method: 'POST',
-        url: KEYCLOAK_APIS.login,
-        headers: {
-          'content-type': HTTP_CONTENT_TYPES.urlencoded,
-        },
-        data: credentials.toString(),
-      };
-      return await axios(config);
-    } catch (error) {
-      throw new BadRequestException('Refresh token has expired');
-    }
-  }
+  // private async validateRefreshToken(credentials: URLSearchParams) {
+  //   try {
+  //     const config = {
+  //       method: 'POST',
+  //       url: KEYCLOAK_APIS.login,
+  //       headers: {
+  //         'content-type': HTTP_CONTENT_TYPES.urlencoded,
+  //       },
+  //       data: credentials.toString(),
+  //     };
+  //     return await axios(config);
+  //   } catch (error) {
+  //     throw new BadRequestException('Refresh token has expired');
+  //   }
+  // }
 
-  async refreshAccessToken(refreshToken: string) {
-    if (!refreshToken)
-      throw new UnauthorizedException(
-        'You need to sign-in to access this page',
-      );
-    const bodyParams = new URLSearchParams({
-      scope: process.env.KC_SCOPE,
-      client_id: process.env.KC_CLIENT_ID,
-      grant_type: process.env.KC_REFRESH_TOKEN_GRANT_TYPE,
-      refresh_token: refreshToken?.split(' ')?.[1],
-      client_secret: process.env.KC_CLIENT_SECRET,
-    });
-
-    return await this.validateRefreshToken(bodyParams);
-  }
-
-  // async logout(refreshToken: string) {
+  // async refreshAccessToken(refreshToken: string) {
+  //   if (!refreshToken)
+  //     throw new UnauthorizedException(
+  //       'You need to sign-in to access this page',
+  //     );
   //   const bodyParams = new URLSearchParams({
+  //     scope: process.env.KC_SCOPE,
   //     client_id: process.env.KC_CLIENT_ID,
+  //     grant_type: process.env.KC_REFRESH_TOKEN_GRANT_TYPE,
+  //     refresh_token: refreshToken?.split(' ')?.[1],
   //     client_secret: process.env.KC_CLIENT_SECRET,
-  //     refresh_token: refreshToken.split(' ')[1]
   //   });
 
-  //   await this.logoutToKeycloak(bodyParams);
+  //   return await this.validateRefreshToken(bodyParams);
   // }
+
 }

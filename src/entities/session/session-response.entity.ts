@@ -9,27 +9,13 @@ export const loginOpts = {
     created_at: { type: 'string' },
     updated_at: { type: 'string' },
     organization_id: { type: 'number' },
-    organization_name: { type: 'string' }
-  }
+    organization_name: { type: 'string' },
+  },
 };
 
 export const logoutOpts = {
   type: 'object',
   properties: {
-    message: { type: 'string' }
-  }
-};
-
-export const acceptInvitationOpts = {
-  type: 'object',
-  properties: {
-    message: { type: 'string' }
-  }
-};
-
-export const refreshAccessTokenOpts = {
-  type: 'object',
-  properties: {
-    message: { type: 'string' }
-  }
+    message: { type: 'string' },
+  },
 };
