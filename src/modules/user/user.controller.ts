@@ -1,11 +1,11 @@
-
 import { errorOpts } from 'src/entities/shared-schema/error.schema';
 import { headerOpts } from 'src/entities/shared-schema/header.schema';
 import { UserService } from './user.service';
 
-import { FastifyError, FastifyReply,FastifyRequest } from 'fastify';
+import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 
 import {
+  createUserOpts,
   detailUserOpts,
 } from 'src/entities/user/user-response.entity';
 
@@ -15,6 +15,8 @@ import {
   Get,
   Controller,
   HttpStatus,
+  Post,
+  Body,
 } from '@nestjs/common';
 
 import {
@@ -27,7 +29,12 @@ import {
   ApiUnauthorizedResponse,
   ApiInternalServerErrorResponse,
   ApiUnprocessableEntityResponse,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { GetCurrentUser } from 'src/common/decorators';
+import activityLogger from 'src/config/activity-logger';
+import { UserCreateParams } from 'src/entities/user/user-request.entity';
+import { UserInstance } from 'src/dto/user.dto';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -62,14 +69,34 @@ import {
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Post()
+  @ApiCreatedResponse({
+    description: 'newly added user',
+    schema: createUserOpts,
+  })
+  create(
+    @Req() req: any,
+    @Res() reply: FastifyReply,
+    @Body() params: UserCreateParams,
+    @GetCurrentUser() currentUser: UserInstance,
+  ) {
+    return this.userService
+      .create(params, currentUser)
+      .then((user) => {
+        activityLogger.log(currentUser, user, 'user', 'created');
+        reply.code(HttpStatus.CREATED).send(user);
+      })
+      .catch((error) => {
+        reply.send(error);
+      });
+  }
+
   @Get()
   @ApiOkResponse({
     description: 'User details',
     schema: detailUserOpts,
   })
-  detailUser(
-    @Req() req: FastifyRequest, @Res() reply: FastifyReply
-  ) {
+  detailUser(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
     return this.userService
       .validateAccessToken(req.headers.authorization as string)
       .then((user) => {
