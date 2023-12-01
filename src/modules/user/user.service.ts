@@ -41,7 +41,7 @@ export class UserService {
     // Create user in Telephony Application
     let telephonyApiResponse;
     try {
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
       telephonyApiResponse = await axios.post(
         process.env.TELEPHONY_CREATE_USER_ENDPOINT,
@@ -50,7 +50,7 @@ export class UserService {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.access_token}`,
+            Authorization: `${currentUser.access_token}`,
           },
         },
       );
@@ -59,6 +59,7 @@ export class UserService {
       await kcAdminClient.users.del({
         id: newUserInKeycloak.id,
       });
+
       throw new Error('Failed to create user in telephony application');
     }
 
@@ -85,7 +86,12 @@ export class UserService {
       await kcAdminClient.users.del({
         id: newUserInKeycloak.id,
       });
-      await axios.delete(telephonyApiResponse.headers.location);
+      // await axios.delete(telephonyApiResponse.headers.location);
+      await axios.delete(telephonyApiResponse.headers.location, {
+        headers: {
+          Authorization: `${currentUser.access_token}`,
+        },
+      });
 
       throw new Error('Failed to create user in PostgreSQL database');
     }

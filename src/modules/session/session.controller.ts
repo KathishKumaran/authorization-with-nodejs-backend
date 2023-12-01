@@ -18,7 +18,7 @@ import {
   Delete,
   Header,
   Controller,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
 
 import {
@@ -34,7 +34,7 @@ import {
 @ApiTags('sessions')
 @ApiInternalServerErrorResponse({
   description: 'Something went wrong',
-  schema: errorOpts
+  schema: errorOpts,
 })
 @Controller()
 export class SessionController {
@@ -44,24 +44,30 @@ export class SessionController {
   @Post('login')
   @ApiOkResponse({
     description: 'Successfully logged in',
-    schema: loginOpts
+    schema: loginOpts,
   })
   @ApiUnauthorizedResponse({
     description: 'Invalid username or password',
-    schema: errorOpts
+    schema: errorOpts,
   })
   @ApiResponse({
     description: 'bearer token ',
-    schema: headerOpts
+    schema: headerOpts,
   })
   @Header('Authorization', 'none')
   login(
     @Req() req: FastifyRequest,
     @Res() reply: FastifyReply,
-    @Body() loginParams: LoginParams
+    @Body() loginParams,
   ) {
+    let attrs = loginParams;
+
+    if(typeof loginParams === 'string'){
+      attrs = JSON.parse(loginParams);
+    }
+
     return this.sessionService
-      .signin(loginParams, req.socket.remoteAddress)
+      .signin(attrs, req.socket.remoteAddress)
       .then((user) => {
         reply.header('Authorization', `Bearer ${user.access_token}`);
         reply.header('Refresh_token', `Bearer ${user.refresh_token}`);
@@ -72,7 +78,6 @@ export class SessionController {
       });
   }
 
-
   @Delete('logout')
   @ApiBearerAuth()
   @ApiHeaders([
@@ -80,22 +85,22 @@ export class SessionController {
       name: 'header',
       required: true,
       description: 'Authorization',
-      schema: { default: 'Bearer token' }
+      schema: { default: 'Bearer token' },
     },
     {
       name: 'header ',
       required: true,
       description: 'refresh_token',
-      schema: { default: 'Bearer token' }
-    }
+      schema: { default: 'Bearer token' },
+    },
   ])
   @ApiUnauthorizedResponse({
     description: 'Invalid session',
-    schema: errorOpts
+    schema: errorOpts,
   })
   @ApiOkResponse({
     description: 'Successfully logged out',
-    schema: logoutOpts
+    schema: logoutOpts,
   })
   logout(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
     return this.sessionService

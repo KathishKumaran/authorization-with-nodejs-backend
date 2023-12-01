@@ -35,6 +35,7 @@ import { GetCurrentUser } from 'src/common/decorators';
 import activityLogger from 'src/config/activity-logger';
 import { UserCreateParams } from 'src/entities/user/user-request.entity';
 import { UserInstance } from 'src/dto/user.dto';
+import { log } from 'console';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -77,7 +78,7 @@ export class UserController {
   create(
     @Req() req: any,
     @Res() reply: FastifyReply,
-    @Body() params: UserCreateParams,
+    @Body() params:UserCreateParams,
     @GetCurrentUser() currentUser: UserInstance,
   ) {
     return this.userService
