@@ -41,7 +41,7 @@ async function main() {
     {
       id: 1,
       role_id: 1,
-      email: 'gnana@yavar.in',
+      email: 'gnana@yavar.ai',
       first_name: 'Gnana',
       last_name: 'Billian',
       confirmed_at: new Date(),

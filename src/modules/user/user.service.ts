@@ -29,7 +29,6 @@ export class UserService {
   async create(attrs: UserCreateParams, currentUser: UserInstance) {
     const currentTime = new Date();
 
-    // Create user in Keycloak
     const newUserInKeycloak = await kcAdminClient.users.create({
       email: attrs.email,
       enabled: true,
@@ -38,11 +37,9 @@ export class UserService {
       firstName: attrs.first_name,
     });
 
-    // Create user in Telephony Application
     let telephonyApiResponse;
     try {
       // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
       telephonyApiResponse = await axios.post(
         process.env.TELEPHONY_CREATE_USER_ENDPOINT,
         {
@@ -55,7 +52,6 @@ export class UserService {
         },
       );
     } catch (error) {
-      // Rollback: Delete the newly created user from Keycloak
       await kcAdminClient.users.del({
         id: newUserInKeycloak.id,
       });
@@ -63,7 +59,6 @@ export class UserService {
       throw new Error('Failed to create user in telephony application');
     }
 
-    //Create user in PostgreSQL database
     let createdUserInDatabase;
     try {
       createdUserInDatabase = await this.prisma.$transaction(async (prisma) => {
@@ -82,11 +77,9 @@ export class UserService {
         return userInDatabase;
       });
     } catch (error) {
-      // Rollback: Delete the newly created user from Keycloak and Telephony Application
       await kcAdminClient.users.del({
         id: newUserInKeycloak.id,
       });
-      // await axios.delete(telephonyApiResponse.headers.location);
       await axios.delete(telephonyApiResponse.headers.location, {
         headers: {
           Authorization: `${currentUser.access_token}`,
