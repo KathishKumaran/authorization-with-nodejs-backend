@@ -1,12 +1,12 @@
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/client1';
 
 const prisma = new PrismaClient();
 
 const kcAdminClient = new KcAdminClient({
   realmName: process.env.KC_REALM,
-  baseUrl: process.env.KC_BASE_URL
+  baseUrl: process.env.KC_BASE_URL,
 });
 
 async function main() {
@@ -15,26 +15,26 @@ async function main() {
     username: process.env.KC_USER_NAME,
     clientId: process.env.KC_CLIENT_ID,
     grantType: 'password',
-    clientSecret: process.env.KC_CLIENT_SECRET
+    clientSecret: process.env.KC_CLIENT_SECRET,
   });
 
   const roleData = [
     {
       id: 1,
-      name: 'Admin'
+      name: 'Admin',
     },
     {
       id: 2,
-      name: 'SM'
+      name: 'SM',
     },
     {
       id: 3,
-      name: 'RGM'
+      name: 'RGM',
     },
     {
       id: 4,
-      name: 'AM'
-    }
+      name: 'AM',
+    },
   ];
 
   const userData = [
@@ -45,16 +45,16 @@ async function main() {
       first_name: 'Gnana',
       last_name: 'Billian',
       confirmed_at: new Date(),
-    }
+    },
   ];
 
   for await (const role of roleData) {
     await prisma.role.upsert({
       where: {
-        id: role.id
+        id: role.id,
       },
       create: role,
-      update: role
+      update: role,
     });
   }
 
@@ -69,17 +69,17 @@ async function main() {
         {
           type: 'password',
           value: '12345678',
-          temporary: false
-        }
-      ]
+          temporary: false,
+        },
+      ],
     });
 
     await prisma.user.upsert({
       where: {
-        id: user.id
+        id: user.id,
       },
       create: { ...user, kc_user_id: KcUser.id },
-      update: { ...user, kc_user_id: KcUser.id }
+      update: { ...user, kc_user_id: KcUser.id },
     });
   }
 }
@@ -87,14 +87,15 @@ async function main() {
 main()
   .then(async () => {
     await kcAdminClient.users.logout({
-      id: (await kcAdminClient.whoAmI.find()).userId
+      id: (await kcAdminClient.whoAmI.find()).userId,
     });
 
     await prisma.$disconnect();
   })
   .catch(async (err) => {
+    console.log('err--------', err);
     await kcAdminClient.users.logout({
-      id: (await kcAdminClient.whoAmI.find()).userId
+      id: (await kcAdminClient.whoAmI.find()).userId,
     });
     await prisma.$disconnect();
   });

@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './config/database';
+import { MatrixDBPrismaModule, PrismaModule } from './config';
 import { SessionModule } from './modules/session/session.module';
 import { UserModelModule } from './models/user/user.model';
 import { UserModule } from './modules/user/user.module';
 
-
 @Module({
   imports: [
-    UserModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    MatrixDBPrismaModule,
+    UserModule,
     SessionModule,
     UserModelModule,
-    ConfigModule.forRoot({ isGlobal: true })
   ],
   providers: [],
-  controllers: []
+  controllers: [],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from '../../prisma/generated/client1';
 
 export type UserInstance = User & {
   access_token?: string;

@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+    output = "./generated/client1"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          Int       @unique @default(autoincrement())
+  name        String    @db.VarChar(100)
+  create_user User?     @relation(name: "create_user", fields: [created_by], references: [id])
+  created_by  Int?      @db.Integer()
+  update_user User?     @relation(name: "update_user", fields: [updated_by], references: [id])
+  updated_by  Int?      @db.Integer()
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  deleted_at  DateTime? @db.Timestamp()
+  User        User[]
+
+  @@map("roles")
+}
+
+model User {
+  id                 Int       @unique @default(autoincrement())
+  first_name         String    @db.VarChar(100)
+  last_name          String    @db.VarChar(100)
+  kc_user_id         String    @db.VarChar()
+  email              String    @db.VarChar(255)
+  Role               Role?     @relation(fields: [role_id], references: [id])
+  role_id            Int       @db.Integer()
+  create_user        User?     @relation(name: "create_user", fields: [created_by], references: [id])
+  created_by         Int?      @db.Integer()
+  update_user        User?     @relation(name: "update_user", fields: [updated_by], references: [id])
+  updated_by         Int?      @db.Integer()
+  confirmed_at       DateTime? @db.Timestamp()
+  last_seen_at       DateTime? @db.Timestamp()
+  sign_in_count      Int       @default(0)
+  current_sign_in_ip String?   @db.VarChar(50)
+  last_sign_in_ip    String?   @db.VarChar(50)
+  current_sign_in_at DateTime? @db.Timestamp()
+  last_sign_in_at    DateTime? @db.Timestamp()
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  deleted_at         DateTime? @db.Timestamp()
+  created_users      User[]    @relation("create_user")
+  updated_users      User[]    @relation("update_user")
+  create_role        Role[]    @relation("create_user")
+  update_role        Role[]    @relation("update_user")
+
+  @@map("users")
+}
