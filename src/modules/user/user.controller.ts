@@ -35,7 +35,6 @@ import { GetCurrentUser } from 'src/common/decorators';
 import activityLogger from 'src/config/activity-logger';
 import { UserCreateParams } from 'src/entities/user/user-request.entity';
 import { UserInstance } from 'src/dto/user.dto';
-import { log } from 'console';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -78,7 +77,7 @@ export class UserController {
   create(
     @Req() req: any,
     @Res() reply: FastifyReply,
-    @Body() params:UserCreateParams,
+    @Body() params: UserCreateParams,
     @GetCurrentUser() currentUser: UserInstance,
   ) {
     return this.userService
@@ -105,6 +104,7 @@ export class UserController {
         reply.code(HttpStatus.OK).send(user);
       })
       .catch((error: FastifyError) => {
+        console.log('error is', error);
         reply.send(error);
       });
   }

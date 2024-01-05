@@ -35,7 +35,6 @@ async function bootstrap() {
     const domainName = process.env.FRONTEND_DOMAIN;
     app.enableCors(corsOptions(domainName));
 
-
     const uploadFileSize = Number(process.env.FILE_SIZE);
     app.register(fastifyMultipart, {
       attachFieldsToBody: true,

@@ -2,13 +2,7 @@ import logger from './logger';
 
 const corsOptions = (domain: string) => {
   return {
-    origin: (origin: string, callback: any) => {
-      if (domain !== origin && domain !== '*') {
-        logger.error({ msg: `Origin ${origin} not allowed by CORS` });
-        return callback(null, false);
-      }
-      return callback(null, true);
-    },
+    origin: true,
     methods: 'OPTION, GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,

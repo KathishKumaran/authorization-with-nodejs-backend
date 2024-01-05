@@ -8,15 +8,22 @@ import {
   Catch,
   HttpException,
   ArgumentsHost,
-  ExceptionFilter
+  ExceptionFilter,
 } from '@nestjs/common';
 import {
   PrismaClientRustPanicError,
   PrismaClientValidationError,
   PrismaClientKnownRequestError,
   PrismaClientUnknownRequestError,
-  PrismaClientInitializationError
-} from '@prisma/client/runtime';
+  PrismaClientInitializationError,
+} from '@prisma/client/runtime/library';
+// import {
+//   PrismaClientRustPanicError,
+//   PrismaClientValidationError,
+//   PrismaClientKnownRequestError,
+//   PrismaClientUnknownRequestError,
+//   PrismaClientInitializationError,
+// } from '@prisma/client/runtime';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -62,19 +69,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
       } else {
         httpStatus = 500;
         errorMessage = [
-          'Sorry! something went to wrong on our end, Please try again later'
+          'Sorry! something went to wrong on our end, Please try again later',
         ];
         logger.error({ err: exception });
       }
     } else {
       httpStatus = 500;
       errorMessage = [
-        'Sorry! something went to wrong on our end, Please try again later'
+        'Sorry! something went to wrong on our end, Please try again later',
       ];
       logger.error({ err: exception });
     }
     const errorResponse = {
-      errors: typeof errorMessage === 'string' ? [errorMessage] : errorMessage
+      errors: typeof errorMessage === 'string' ? [errorMessage] : errorMessage,
     };
     logger.error({ msg: errorMessage });
     httpAdapter.reply(ctx.getResponse(), errorResponse, httpStatus);

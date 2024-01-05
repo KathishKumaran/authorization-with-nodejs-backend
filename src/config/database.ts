@@ -1,5 +1,5 @@
 import { MODEL } from './constants';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient as PrismaClient1 } from '../../prisma/generated/client1';
 import { ConfigService } from '@nestjs/config';
 
 import { UserModel, UserModelModule } from 'src/models/user/user.model';
@@ -17,7 +17,7 @@ import {
 
 @Injectable()
 export class PrismaService
-  extends PrismaClient
+  extends PrismaClient1
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(

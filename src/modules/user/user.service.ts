@@ -1,13 +1,23 @@
 import { Injectable } from '@nestjs/common';
 
 import axios from 'axios';
-import { KEYCLOAK_APIS, PrismaService, kcAdminClient } from 'src/config';
+import {
+  KEYCLOAK_APIS,
+  PrismaService,
+  kcAdminClient,
+  MatrixDBPrismaService,
+} from 'src/config';
 import { UserInstance } from 'src/dto/user.dto';
 import { UserCreateParams } from 'src/entities/user/user-request.entity';
 
+import { generateHash } from 'src/config';
+
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private matrixDb: MatrixDBPrismaService,
+  ) {}
 
   async validateAccessToken(token: string) {
     const config = {
@@ -29,6 +39,8 @@ export class UserService {
   async create(attrs: UserCreateParams, currentUser: UserInstance) {
     const currentTime = new Date();
 
+    const hash = generateHash('12345678');
+
     // Create user in Keycloak
     const newUserInKeycloak = await kcAdminClient.users.create({
       email: attrs.email,
@@ -36,6 +48,9 @@ export class UserService {
       username: attrs.email,
       lastName: attrs.last_name,
       firstName: attrs.first_name,
+      attributes: {
+        hashPass: hash,
+      },
     });
 
     // Create user in Telephony Application
@@ -63,6 +78,33 @@ export class UserService {
       throw new Error('Failed to create user in telephony application');
     }
 
+    // Create Matrix user
+    let matrixUser;
+    try {
+      const creationTs = new Date().getTime();
+      matrixUser = await this.matrixDb.user.create({
+        data: {
+          name: `@${attrs.first_name}:localhost`,
+          password_hash: hash,
+          admin: 1,
+          creation_ts: creationTs,
+          upgrade_ts: creationTs,
+        },
+      });
+    } catch (error) {
+      await kcAdminClient.users.del({
+        id: newUserInKeycloak.id,
+      });
+      // await axios.delete(telephonyApiResponse.headers.location);
+      await axios.delete(telephonyApiResponse.headers.location, {
+        headers: {
+          Authorization: `${currentUser.access_token}`,
+        },
+      });
+
+      throw new Error('Failed to create user in Matrix database');
+    }
+
     //Create user in PostgreSQL database
     let createdUserInDatabase;
     try {
@@ -86,6 +128,9 @@ export class UserService {
       await kcAdminClient.users.del({
         id: newUserInKeycloak.id,
       });
+
+      await this.matrixDb.user.delete({ where: { name: matrixUser.name } });
+
       // await axios.delete(telephonyApiResponse.headers.location);
       await axios.delete(telephonyApiResponse.headers.location, {
         headers: {

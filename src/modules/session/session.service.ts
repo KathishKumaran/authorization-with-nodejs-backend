@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { User } from '@prisma/client';
+import { User } from '../../../prisma/generated/client1';
 
 import { PrismaService } from 'src/config';
 import { KEYCLOAK_APIS, HTTP_CONTENT_TYPES } from 'src/config';
@@ -90,6 +90,7 @@ export class SessionService {
 
   async signin(signinAttrs: LoginParams, ipAddress: string) {
     const currentUser = await this.getUserByEmail(signinAttrs.email);
+    console.log('currentUser is', currentUser);
     if (!currentUser.confirmed_at)
       throw new ForbiddenException(
         'Kindly accept the invitation sent to your email',
@@ -151,5 +152,4 @@ export class SessionService {
 
   //   return await this.validateRefreshToken(bodyParams);
   // }
-
 }
