@@ -7,6 +7,7 @@ import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import {
   createUserOpts,
   detailUserOpts,
+  listAndPaginationUserOpts,
 } from 'src/entities/user/user-response.entity';
 
 import {
@@ -17,6 +18,7 @@ import {
   HttpStatus,
   Post,
   Body,
+  Query,
 } from '@nestjs/common';
 
 import {
@@ -91,7 +93,7 @@ export class UserController {
       });
   }
 
-  @Get()
+  @Get('verification')
   @ApiOkResponse({
     description: 'User details',
     schema: detailUserOpts,
@@ -102,6 +104,28 @@ export class UserController {
       .then((user) => {
         reply.header('Authorization', null);
         reply.code(HttpStatus.OK).send(user);
+      })
+      .catch((error: FastifyError) => {
+        console.log('error is', error);
+        reply.send(error);
+      });
+  }
+
+  @Get()
+  @ApiOkResponse({
+    description: 'User details',
+    schema: listAndPaginationUserOpts,
+  })
+  listAndPagination(
+    @Query() queryParams: any,
+    @Res() reply: FastifyReply,
+    @GetCurrentUser() currentUser: UserInstance,
+  ) {
+    return this.userService
+      .filterAndPagination(currentUser, queryParams)
+      .then((users) => {
+        // reply.header('Authorization', null);
+        reply.code(HttpStatus.OK).send(users);
       })
       .catch((error: FastifyError) => {
         console.log('error is', error);

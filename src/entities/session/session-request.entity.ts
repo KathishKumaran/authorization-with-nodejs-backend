@@ -6,7 +6,7 @@ export class LoginParams {
   // @IsEmail()
   // @IsNotEmpty()
   @ApiProperty()
-  email: string;
+  username: string;
 
   // @IsString()
   // @IsNotEmpty()

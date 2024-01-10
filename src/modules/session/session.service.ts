@@ -12,6 +12,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
+import { kcAdminClient } from 'src/config/keycloak.config';
+
 @Injectable()
 export class SessionService {
   constructor(private prisma: PrismaService) {}
@@ -43,6 +45,7 @@ export class SessionService {
     });
 
     const { data } = await this.loginToKeyCloak(bodyParams);
+    console.log('data --------------is', data);
 
     const userUpdateAttributes = {
       last_seen_at: new Date(),
@@ -64,6 +67,11 @@ export class SessionService {
         },
       },
     });
+
+    const keyCloakUser = await kcAdminClient.users.findOne({
+      id: userData.kc_user_id,
+    });
+
     return {
       userDetails: {
         id: userData.id,
@@ -74,6 +82,7 @@ export class SessionService {
         first_name: userData.first_name,
         created_at: userData.created_at,
         updated_at: userData.updated_at,
+        matrix_pass: keyCloakUser.attributes?.hashPass[0],
       },
       access_token: data.access_token,
       refresh_token: data.refresh_token,
@@ -89,7 +98,7 @@ export class SessionService {
   }
 
   async signin(signinAttrs: LoginParams, ipAddress: string) {
-    const currentUser = await this.getUserByEmail(signinAttrs.email);
+    const currentUser = await this.getUserByEmail(signinAttrs.username);
     console.log('currentUser is', currentUser);
     if (!currentUser.confirmed_at)
       throw new ForbiddenException(

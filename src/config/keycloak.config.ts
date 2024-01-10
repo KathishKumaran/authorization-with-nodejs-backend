@@ -1,6 +1,10 @@
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 
-import { Issuer } from 'openid-client';
+import { Issuer, custom } from 'openid-client';
+
+custom.setHttpOptionsDefaults({
+  timeout: 10000,
+});
 
 export const kcAdminClient = new KcAdminClient({
   realmName: process.env.KC_REALM,

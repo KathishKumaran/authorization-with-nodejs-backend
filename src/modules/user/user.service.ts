@@ -11,6 +11,10 @@ import { UserInstance } from 'src/dto/user.dto';
 import { UserCreateParams } from 'src/entities/user/user-request.entity';
 
 import { generateHash } from 'src/config';
+import { encryptPass } from 'src/config/encrypt-decrypt';
+import { User } from 'prisma/generated/client1';
+
+import { paginate, paginatorResult } from 'src/lib/paginator-result';
 
 @Injectable()
 export class UserService {
@@ -28,6 +32,7 @@ export class UserService {
       },
     };
     const userInfo = await axios(config);
+    console.log('userInfo ------', userInfo);
 
     return {
       kc_userId: userInfo.data.sub,
@@ -40,6 +45,8 @@ export class UserService {
     const currentTime = new Date();
 
     const hash = generateHash('12345678');
+    const encryptedPassword = encryptPass('12345678', currentUser);
+    console.log('encryptedPass', encryptedPassword);
 
     // Create user in Keycloak
     const newUserInKeycloak = await kcAdminClient.users.create({
@@ -49,7 +56,7 @@ export class UserService {
       lastName: attrs.last_name,
       firstName: attrs.first_name,
       attributes: {
-        hashPass: hash,
+        hashPass: encryptedPassword,
       },
     });
 
@@ -149,5 +156,30 @@ export class UserService {
       updated_at: createdUserInDatabase.updated_at,
       created_at: createdUserInDatabase.created_at,
     };
+  }
+
+  async filterAndPagination(user: User, query: any) {
+    const page = Number(query.page);
+    const perPage = Number(query.per_page);
+    const pages = page && page > 0 ? page : 1;
+    const perPages = perPage && perPage > 0 && perPage <= 10 ? perPage : 10;
+
+    const skip = (pages - 1) * perPages;
+    const take = perPages;
+
+    const [users, count] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        skip,
+        take,
+      }),
+      this.prisma.user.count({}),
+    ]);
+
+    const rowsAndCounts = {
+      rows: users,
+      count: count,
+    };
+    const result = paginate(rowsAndCounts, perPages, pages);
+    return paginatorResult(result, 'users');
   }
 }
