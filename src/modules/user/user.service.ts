@@ -91,7 +91,7 @@ export class UserService {
       const creationTs = new Date().getTime();
       matrixUser = await this.matrixDb.user.create({
         data: {
-          name: `@${attrs.first_name}:localhost`,
+          name: `@${attrs.first_name}:matrix`,
           password_hash: hash,
           admin: 1,
           creation_ts: creationTs,

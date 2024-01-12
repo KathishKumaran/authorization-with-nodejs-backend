@@ -1,8 +1,12 @@
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 
 import { PrismaClient } from '../generated/client1';
+import { PrismaClient as MatrixDb } from 'prisma/generated/client2';
+import { encryptPass } from 'src/config/encrypt-decrypt';
+import { generateHash } from 'src/config';
 
 const prisma = new PrismaClient();
+const matrixDb = new MatrixDb();
 
 const kcAdminClient = new KcAdminClient({
   realmName: process.env.KC_REALM,
@@ -59,6 +63,11 @@ async function main() {
   }
 
   for await (const user of userData) {
+    const hash = generateHash('12345678');
+    const encryptedPassword = encryptPass('12345678', user.email);
+    console.log('encryptedPass', encryptedPassword);
+    const creationTs = new Date().getTime();
+
     const KcUser = await kcAdminClient.users.create({
       enabled: true,
       email: user.email,
@@ -72,6 +81,9 @@ async function main() {
           temporary: false,
         },
       ],
+      attributes: {
+        hashPass: encryptedPassword,
+      },
     });
 
     await prisma.user.upsert({
@@ -80,6 +92,26 @@ async function main() {
       },
       create: { ...user, kc_user_id: KcUser.id },
       update: { ...user, kc_user_id: KcUser.id },
+    });
+
+    await matrixDb.user.upsert({
+      where: {
+        name: `@${user.first_name}:matrix`,
+      },
+      create: {
+        name: `@${user.first_name}:matrix`,
+        password_hash: hash,
+        admin: 1,
+        creation_ts: creationTs,
+        upgrade_ts: creationTs,
+      },
+      update: {
+        name: `@${user.first_name}:matrix`,
+        password_hash: hash,
+        admin: 1,
+        creation_ts: creationTs,
+        upgrade_ts: creationTs,
+      },
     });
   }
 }
