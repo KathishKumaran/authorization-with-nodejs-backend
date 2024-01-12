@@ -30,6 +30,7 @@ export class SessionService {
       };
       return await axios(config);
     } catch (error) {
+      console.log('error is', error);
       throw new UnauthorizedException('Invalid email or password');
     }
   }
@@ -43,6 +44,7 @@ export class SessionService {
       grant_type: process.env.KC_GRANT_TYPE,
       client_secret: process.env.KC_CLIENT_SECRET,
     });
+    console.log('bodyParams are', bodyParams);
 
     const { data } = await this.loginToKeyCloak(bodyParams);
     console.log('data --------------is', data);

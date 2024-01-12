@@ -45,7 +45,7 @@ export class UserService {
     const currentTime = new Date();
 
     const hash = generateHash('12345678');
-    const encryptedPassword = encryptPass('12345678', currentUser);
+    const encryptedPassword = encryptPass('12345678', attrs.email);
     console.log('encryptedPass', encryptedPassword);
 
     // Create user in Keycloak
