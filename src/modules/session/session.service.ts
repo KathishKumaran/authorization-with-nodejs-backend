@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { User } from '@prisma/client';
+import { User } from '../../../prisma/generated/client1';
 
 import { PrismaService } from 'src/config';
 import { KEYCLOAK_APIS, HTTP_CONTENT_TYPES } from 'src/config';
@@ -11,6 +11,8 @@ import {
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
+
+import { kcAdminClient } from 'src/config/keycloak.config';
 
 @Injectable()
 export class SessionService {
@@ -28,6 +30,7 @@ export class SessionService {
       };
       return await axios(config);
     } catch (error) {
+      console.log('error is', error);
       throw new UnauthorizedException('Invalid email or password');
     }
   }
@@ -41,8 +44,10 @@ export class SessionService {
       grant_type: process.env.KC_GRANT_TYPE,
       client_secret: process.env.KC_CLIENT_SECRET,
     });
+    console.log('bodyParams are', bodyParams);
 
     const { data } = await this.loginToKeyCloak(bodyParams);
+    console.log('data --------------is', data);
 
     const userUpdateAttributes = {
       last_seen_at: new Date(),
@@ -64,6 +69,11 @@ export class SessionService {
         },
       },
     });
+
+    const keyCloakUser = await kcAdminClient.users.findOne({
+      id: userData.kc_user_id,
+    });
+
     return {
       userDetails: {
         id: userData.id,
@@ -74,6 +84,7 @@ export class SessionService {
         first_name: userData.first_name,
         created_at: userData.created_at,
         updated_at: userData.updated_at,
+        matrix_pass: keyCloakUser.attributes?.hashPass[0],
       },
       access_token: data.access_token,
       refresh_token: data.refresh_token,
@@ -89,7 +100,8 @@ export class SessionService {
   }
 
   async signin(signinAttrs: LoginParams, ipAddress: string) {
-    const currentUser = await this.getUserByEmail(signinAttrs.email);
+    const currentUser = await this.getUserByEmail(signinAttrs.username);
+    console.log('currentUser is', currentUser);
     if (!currentUser.confirmed_at)
       throw new ForbiddenException(
         'Kindly accept the invitation sent to your email',
@@ -151,5 +163,4 @@ export class SessionService {
 
   //   return await this.validateRefreshToken(bodyParams);
   // }
-
 }

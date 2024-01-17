@@ -1,12 +1,16 @@
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/client1';
+import { PrismaClient as MatrixDb } from 'prisma/generated/client2';
+import { encryptPass } from 'src/config/encrypt-decrypt';
+import { generateHash } from 'src/config';
 
 const prisma = new PrismaClient();
+const matrixDb = new MatrixDb();
 
 const kcAdminClient = new KcAdminClient({
   realmName: process.env.KC_REALM,
-  baseUrl: process.env.KC_BASE_URL
+  baseUrl: process.env.KC_BASE_URL,
 });
 
 async function main() {
@@ -15,26 +19,26 @@ async function main() {
     username: process.env.KC_USER_NAME,
     clientId: process.env.KC_CLIENT_ID,
     grantType: 'password',
-    clientSecret: process.env.KC_CLIENT_SECRET
+    clientSecret: process.env.KC_CLIENT_SECRET,
   });
 
   const roleData = [
     {
       id: 1,
-      name: 'Admin'
+      name: 'Admin',
     },
     {
       id: 2,
-      name: 'SM'
+      name: 'SM',
     },
     {
       id: 3,
-      name: 'RGM'
+      name: 'RGM',
     },
     {
       id: 4,
-      name: 'AM'
-    }
+      name: 'AM',
+    },
   ];
 
   const userData = [
@@ -45,20 +49,25 @@ async function main() {
       first_name: 'Gnana',
       last_name: 'Billian',
       confirmed_at: new Date(),
-    }
+    },
   ];
 
   for await (const role of roleData) {
     await prisma.role.upsert({
       where: {
-        id: role.id
+        id: role.id,
       },
       create: role,
-      update: role
+      update: role,
     });
   }
 
   for await (const user of userData) {
+    const hash = generateHash('12345678');
+    const encryptedPassword = encryptPass('12345678', user.email);
+    console.log('encryptedPass', encryptedPassword);
+    const creationTs = new Date().getTime();
+
     const KcUser = await kcAdminClient.users.create({
       enabled: true,
       email: user.email,
@@ -69,17 +78,40 @@ async function main() {
         {
           type: 'password',
           value: '12345678',
-          temporary: false
-        }
-      ]
+          temporary: false,
+        },
+      ],
+      attributes: {
+        hashPass: encryptedPassword,
+      },
     });
 
     await prisma.user.upsert({
       where: {
-        id: user.id
+        id: user.id,
       },
       create: { ...user, kc_user_id: KcUser.id },
-      update: { ...user, kc_user_id: KcUser.id }
+      update: { ...user, kc_user_id: KcUser.id },
+    });
+
+    await matrixDb.user.upsert({
+      where: {
+        name: `@${user.first_name}:matrix`,
+      },
+      create: {
+        name: `@${user.first_name}:matrix`,
+        password_hash: hash,
+        admin: 1,
+        creation_ts: creationTs,
+        upgrade_ts: creationTs,
+      },
+      update: {
+        name: `@${user.first_name}:matrix`,
+        password_hash: hash,
+        admin: 1,
+        creation_ts: creationTs,
+        upgrade_ts: creationTs,
+      },
     });
   }
 }
@@ -87,14 +119,15 @@ async function main() {
 main()
   .then(async () => {
     await kcAdminClient.users.logout({
-      id: (await kcAdminClient.whoAmI.find()).userId
+      id: (await kcAdminClient.whoAmI.find()).userId,
     });
 
     await prisma.$disconnect();
   })
   .catch(async (err) => {
+    console.log('err--------', err);
     await kcAdminClient.users.logout({
-      id: (await kcAdminClient.whoAmI.find()).userId
+      id: (await kcAdminClient.whoAmI.find()).userId,
     });
     await prisma.$disconnect();
   });

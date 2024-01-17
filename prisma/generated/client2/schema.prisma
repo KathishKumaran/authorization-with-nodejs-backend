@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "./generated/client2"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("SYNAPSE_DATABASE_URL")
+}
+
+model User {
+    name                       String   @unique() @db.VarChar()
+    password_hash              String?  @db.VarChar()
+    creation_ts                Int      @db.Integer()
+    admin                      Int?     @default(0) @db.Integer()
+    upgrade_ts                 Int?     @db.Integer()
+    is_guest                   Int?     @default(0) @db.Integer()
+    appservice_id              Int?     @db.Integer()
+    consent_version            Int?     @db.Integer()
+    consent_server_notice_sent String?  @db.VarChar()
+    user_type                  String?  @db.VarChar()
+    deactivated                Int?     @default(0) @db.Integer()
+    shadow_banned              Boolean? @db.Boolean()
+    consent_ts                 Int?     @db.Integer()
+    approved                   String?  @db.VarChar()
+
+    @@map("users")
+}

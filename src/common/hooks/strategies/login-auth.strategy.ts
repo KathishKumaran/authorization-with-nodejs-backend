@@ -19,6 +19,7 @@ export class UserAuthStrategy {
         );
 
       const { data } = await this.validateAccessToken(accessToken);
+      console.log('data is', data);
       const currentUser = await this.prisma.user.findFirst({
         where: {
           kc_user_id: data.sub
