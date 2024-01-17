@@ -4,6 +4,7 @@ import { PrismaModule } from './config/database';
 import { SessionModule } from './modules/session/session.module';
 import { UserModelModule } from './models/user/user.model';
 import { UserModule } from './modules/user/user.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 
 @Module({
@@ -12,6 +13,7 @@ import { UserModule } from './modules/user/user.module';
     PrismaModule,
     SessionModule,
     UserModelModule,
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true })
   ],
   providers: [],

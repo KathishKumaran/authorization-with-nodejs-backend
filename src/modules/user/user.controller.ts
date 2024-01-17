@@ -17,6 +17,9 @@ import {
   HttpStatus,
   Post,
   Body,
+  Put,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import {
@@ -30,10 +33,11 @@ import {
   ApiInternalServerErrorResponse,
   ApiUnprocessableEntityResponse,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/common/decorators';
 import activityLogger from 'src/config/activity-logger';
-import { UserCreateParams } from 'src/entities/user/user-request.entity';
+import { UserCreateParams, UserUpdateParams } from 'src/entities/user/user-request.entity';
 import { UserInstance } from 'src/dto/user.dto';
 import { log } from 'console';
 
@@ -68,7 +72,7 @@ import { log } from 'console';
 })
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Post()
   @ApiCreatedResponse({
@@ -78,7 +82,7 @@ export class UserController {
   create(
     @Req() req: any,
     @Res() reply: FastifyReply,
-    @Body() params:UserCreateParams,
+    @Body() params: UserCreateParams,
     @GetCurrentUser() currentUser: UserInstance,
   ) {
     return this.userService
@@ -108,4 +112,32 @@ export class UserController {
         reply.send(error);
       });
   }
+
+  @Put(':id')
+  @ApiOkResponse({
+    description: 'User has been updated',
+    schema: createUserOpts
+  })
+  @ApiNotFoundResponse({
+    description: 'No user found',
+    schema: errorOpts
+  })
+  update(
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest | any,
+    @Body() params: UserUpdateParams,
+    @Param('id', new ParseIntPipe()) id: number,
+    @GetCurrentUser() currentUser: UserInstance
+  ) {
+    return this.userService
+      .update(id, params, currentUser)
+      .then((user) => {
+        activityLogger.log(currentUser, user, 'user', 'updated');
+        reply.code(HttpStatus.OK).send(user);
+      })
+      .catch((error) => {
+        reply.send(error);
+      });
+  }
+  
 }
