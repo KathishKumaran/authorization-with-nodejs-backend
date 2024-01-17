@@ -1,9 +1,9 @@
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 
 import { PrismaClient } from '../generated/client1';
-import { PrismaClient as MatrixDb } from 'prisma/generated/client2';
-import { encryptPass } from 'src/config/encrypt-decrypt';
-import { generateHash } from 'src/config';
+import { PrismaClient as MatrixDb } from '../generated/client2';
+import { encryptPass } from '../../src/config/encrypt-decrypt';
+import { generateHash } from '../../src/config';
 
 const prisma = new PrismaClient();
 const matrixDb = new MatrixDb();

@@ -1,18 +1,18 @@
 import * as Joi from 'joi';
 
-import { PrismaModule, PrismaService } from 'src/config';
+import { PrismaModule, PrismaService } from '../../config';
 
 import { Module, Inject, forwardRef, ConflictException } from '@nestjs/common';
 
 export class UserModel {
   constructor(
-    @Inject(forwardRef(() => PrismaService)) private prisma: PrismaService
+    @Inject(forwardRef(() => PrismaService)) private prisma: PrismaService,
   ) {}
 
   isEmailUnique = async (value: string) => {
     const userEmail = await this.prisma.user.findFirst({
       where: { email: value },
-      select: { email: true }
+      select: { email: true },
     });
     if (userEmail) throw new ConflictException('Email already exists');
   };
@@ -66,13 +66,13 @@ export class UserModel {
 
     updated_by: Joi.number().prefs({ convert: false }),
 
-    sign_in_count: Joi.number().prefs({ convert: false })
+    sign_in_count: Joi.number().prefs({ convert: false }),
   });
 }
 
 @Module({
   imports: [forwardRef(() => PrismaModule)],
   providers: [UserModel],
-  exports: [UserModel]
+  exports: [UserModel],
 })
 export class UserModelModule {}

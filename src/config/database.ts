@@ -2,7 +2,7 @@ import { MODEL } from './constants';
 import { PrismaClient as PrismaClient1 } from '../../prisma/generated/client1';
 import { ConfigService } from '@nestjs/config';
 
-import { UserModel, UserModelModule } from 'src/models/user/user.model';
+import { UserModel, UserModelModule } from '../models/user/user.model';
 
 import {
   Global,
