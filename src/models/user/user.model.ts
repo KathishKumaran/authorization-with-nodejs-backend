@@ -17,6 +17,11 @@ export class UserModel {
     if (userEmail) throw new ConflictException('Email already exists');
   };
 
+  getRoleById = async (id: number) => {
+    const role = await this.prisma.role.findUnique({ where: { id: id } });
+    if (!role) throw new Error('Role not found');
+  };
+
   user = Joi.object({
     first_name: Joi.string()
       .pattern(new RegExp(/^([a-zA-Z 0-9_]){1,100}$/))
@@ -32,6 +37,8 @@ export class UserModel {
       .empty()
       .external(this.isEmailUnique)
       .error(new Error('Email should be valid format')),
+
+    role_id: Joi.number().external(this.getRoleById),
 
     kc_user_id: Joi.string(),
 

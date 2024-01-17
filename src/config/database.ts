@@ -12,7 +12,7 @@ import {
   Injectable,
   OnModuleInit,
   OnModuleDestroy,
-  UnprocessableEntityException
+  UnprocessableEntityException,
 } from '@nestjs/common';
 
 @Injectable()
@@ -27,9 +27,9 @@ export class PrismaService
     super({
       datasources: {
         db: {
-          url: config.get('DATABASE_URL')
-        }
-      }
+          url: config.get('DATABASE_URL'),
+        },
+      },
     });
   }
 
@@ -49,8 +49,8 @@ export class PrismaService
           try {
             await this.userModel.user.validateAsync(params.args?.data, {
               errors: {
-                label: false
-              }
+                label: false,
+              },
             });
           } catch (err) {
             throw new UnprocessableEntityException(err);
@@ -59,7 +59,7 @@ export class PrismaService
         if (params.action === 'update') {
           try {
             await this.userModel.user.validateAsync(params.args?.data, {
-              externals: false
+              externals: false,
             });
           } catch (err) {
             throw new UnprocessableEntityException(err);
@@ -113,10 +113,8 @@ export class PrismaService
 
 @Global()
 @Module({
-  imports: [
-    forwardRef(() => UserModelModule),
-  ],
+  imports: [forwardRef(() => UserModelModule)],
   providers: [PrismaService],
-  exports: [PrismaService]
+  exports: [PrismaService],
 })
 export class PrismaModule {}

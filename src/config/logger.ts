@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 const logLevel = process.env.LOG_LEVEL || 'info';
 const logConfig = {
-  name: 'Workflow Engine API Server',
+  name: 'Copper Engine API Server',
   level: logLevel,
   timestamp: () => `,"time":"${moment()}"`,
   formatters: {

@@ -1,11 +1,11 @@
-
 import { errorOpts } from 'src/entities/shared-schema/error.schema';
 import { headerOpts } from 'src/entities/shared-schema/header.schema';
 import { UserService } from './user.service';
 
-import { FastifyError, FastifyReply,FastifyRequest } from 'fastify';
+import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 
 import {
+  createUserOpts,
   detailUserOpts,
 } from 'src/entities/user/user-response.entity';
 
@@ -15,6 +15,11 @@ import {
   Get,
   Controller,
   HttpStatus,
+  Post,
+  Body,
+  Put,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import {
@@ -27,7 +32,14 @@ import {
   ApiUnauthorizedResponse,
   ApiInternalServerErrorResponse,
   ApiUnprocessableEntityResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
+import { GetCurrentUser } from 'src/common/decorators';
+import activityLogger from 'src/config/activity-logger';
+import { UserCreateParams, UserUpdateParams } from 'src/entities/user/user-request.entity';
+import { UserInstance } from 'src/dto/user.dto';
+import { log } from 'console';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -60,16 +72,36 @@ import {
 })
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
+
+  @Post()
+  @ApiCreatedResponse({
+    description: 'newly added user',
+    schema: createUserOpts,
+  })
+  create(
+    @Req() req: any,
+    @Res() reply: FastifyReply,
+    @Body() params: UserCreateParams,
+    @GetCurrentUser() currentUser: UserInstance,
+  ) {
+    return this.userService
+      .create(params, currentUser)
+      .then((user) => {
+        activityLogger.log(currentUser, user, 'user', 'created');
+        reply.code(HttpStatus.CREATED).send(user);
+      })
+      .catch((error) => {
+        reply.send(error);
+      });
+  }
 
   @Get()
   @ApiOkResponse({
     description: 'User details',
     schema: detailUserOpts,
   })
-  detailUser(
-    @Req() req: FastifyRequest, @Res() reply: FastifyReply
-  ) {
+  detailUser(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
     return this.userService
       .validateAccessToken(req.headers.authorization as string)
       .then((user) => {
@@ -80,4 +112,32 @@ export class UserController {
         reply.send(error);
       });
   }
+
+  @Put(':id')
+  @ApiOkResponse({
+    description: 'User has been updated',
+    schema: createUserOpts
+  })
+  @ApiNotFoundResponse({
+    description: 'No user found',
+    schema: errorOpts
+  })
+  update(
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest | any,
+    @Body() params: UserUpdateParams,
+    @Param('id', new ParseIntPipe()) id: number,
+    @GetCurrentUser() currentUser: UserInstance
+  ) {
+    return this.userService
+      .update(id, params, currentUser)
+      .then((user) => {
+        activityLogger.log(currentUser, user, 'user', 'updated');
+        reply.code(HttpStatus.OK).send(user);
+      })
+      .catch((error) => {
+        reply.send(error);
+      });
+  }
+  
 }
