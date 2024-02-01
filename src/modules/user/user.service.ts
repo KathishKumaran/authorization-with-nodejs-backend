@@ -126,6 +126,7 @@ export class UserService {
             last_name: attrs.last_name,
             created_by: currentUser.id,
             first_name: attrs.first_name,
+            confirmed_at: new Date(),
           },
         });
         return userInDatabase;
