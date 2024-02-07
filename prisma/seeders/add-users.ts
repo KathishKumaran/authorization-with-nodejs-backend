@@ -90,23 +90,31 @@ async function main() {
       where: {
         id: user.id,
       },
-      create: { ...user, kc_user_id: KcUser.id },
-      update: { ...user, kc_user_id: KcUser.id },
+      create: {
+        ...user,
+        kc_user_id: KcUser.id,
+        matrix_name: `@${user.first_name}:matrix.yavar.ai`,
+      },
+      update: {
+        ...user,
+        kc_user_id: KcUser.id,
+        matrix_name: `@${user.first_name}:matrix.yavar.ai`,
+      },
     });
 
     await matrixDb.user.upsert({
       where: {
-        name: `@${user.first_name}:matrix`,
+        name: `@${user.first_name}:matrix.yavar.ai`,
       },
       create: {
-        name: `@${user.first_name}:matrix`,
+        name: `@${user.first_name}:matrix.yavar.ai`,
         password_hash: hash,
         admin: 1,
         creation_ts: creationTs,
         upgrade_ts: creationTs,
       },
       update: {
-        name: `@${user.first_name}:matrix`,
+        name: `@${user.first_name}:matrix.yavar.ai`,
         password_hash: hash,
         admin: 1,
         creation_ts: creationTs,

@@ -42,6 +42,8 @@ export class UserModel {
 
     kc_user_id: Joi.string(),
 
+    matrix_name: Joi.string(),
+
     confirmed_at: Joi.date(),
 
     created_at: Joi.date(),

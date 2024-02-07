@@ -2115,6 +2115,7 @@ export namespace Prisma {
     first_name: string | null
     last_name: string | null
     kc_user_id: string | null
+    matrix_name: string | null
     email: string | null
     role_id: number | null
     created_by: number | null
@@ -2136,6 +2137,7 @@ export namespace Prisma {
     first_name: string | null
     last_name: string | null
     kc_user_id: string | null
+    matrix_name: string | null
     email: string | null
     role_id: number | null
     created_by: number | null
@@ -2157,6 +2159,7 @@ export namespace Prisma {
     first_name: number
     last_name: number
     kc_user_id: number
+    matrix_name: number
     email: number
     role_id: number
     created_by: number
@@ -2196,6 +2199,7 @@ export namespace Prisma {
     first_name?: true
     last_name?: true
     kc_user_id?: true
+    matrix_name?: true
     email?: true
     role_id?: true
     created_by?: true
@@ -2217,6 +2221,7 @@ export namespace Prisma {
     first_name?: true
     last_name?: true
     kc_user_id?: true
+    matrix_name?: true
     email?: true
     role_id?: true
     created_by?: true
@@ -2238,6 +2243,7 @@ export namespace Prisma {
     first_name?: true
     last_name?: true
     kc_user_id?: true
+    matrix_name?: true
     email?: true
     role_id?: true
     created_by?: true
@@ -2346,6 +2352,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name: string | null
     email: string
     role_id: number
     created_by: number | null
@@ -2386,6 +2393,7 @@ export namespace Prisma {
     first_name?: boolean
     last_name?: boolean
     kc_user_id?: boolean
+    matrix_name?: boolean
     email?: boolean
     role_id?: boolean
     created_by?: boolean
@@ -2415,6 +2423,7 @@ export namespace Prisma {
     first_name?: boolean
     last_name?: boolean
     kc_user_id?: boolean
+    matrix_name?: boolean
     email?: boolean
     role_id?: boolean
     created_by?: boolean
@@ -2459,6 +2468,7 @@ export namespace Prisma {
       first_name: string
       last_name: string
       kc_user_id: string
+      matrix_name: string | null
       email: string
       role_id: number
       created_by: number | null
@@ -2884,6 +2894,7 @@ export namespace Prisma {
     readonly first_name: FieldRef<"User", 'String'>
     readonly last_name: FieldRef<"User", 'String'>
     readonly kc_user_id: FieldRef<"User", 'String'>
+    readonly matrix_name: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly role_id: FieldRef<"User", 'Int'>
     readonly created_by: FieldRef<"User", 'Int'>
@@ -3389,6 +3400,7 @@ export namespace Prisma {
     first_name: 'first_name',
     last_name: 'last_name',
     kc_user_id: 'kc_user_id',
+    matrix_name: 'matrix_name',
     email: 'email',
     role_id: 'role_id',
     created_by: 'created_by',
@@ -3577,6 +3589,7 @@ export namespace Prisma {
     first_name?: StringFilter<"User"> | string
     last_name?: StringFilter<"User"> | string
     kc_user_id?: StringFilter<"User"> | string
+    matrix_name?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
     role_id?: IntFilter<"User"> | number
     created_by?: IntNullableFilter<"User"> | number | null
@@ -3605,6 +3618,7 @@ export namespace Prisma {
     first_name?: SortOrder
     last_name?: SortOrder
     kc_user_id?: SortOrder
+    matrix_name?: SortOrderInput | SortOrder
     email?: SortOrder
     role_id?: SortOrder
     created_by?: SortOrderInput | SortOrder
@@ -3636,6 +3650,7 @@ export namespace Prisma {
     first_name?: StringFilter<"User"> | string
     last_name?: StringFilter<"User"> | string
     kc_user_id?: StringFilter<"User"> | string
+    matrix_name?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
     role_id?: IntFilter<"User"> | number
     created_by?: IntNullableFilter<"User"> | number | null
@@ -3664,6 +3679,7 @@ export namespace Prisma {
     first_name?: SortOrder
     last_name?: SortOrder
     kc_user_id?: SortOrder
+    matrix_name?: SortOrderInput | SortOrder
     email?: SortOrder
     role_id?: SortOrder
     created_by?: SortOrderInput | SortOrder
@@ -3693,6 +3709,7 @@ export namespace Prisma {
     first_name?: StringWithAggregatesFilter<"User"> | string
     last_name?: StringWithAggregatesFilter<"User"> | string
     kc_user_id?: StringWithAggregatesFilter<"User"> | string
+    matrix_name?: StringNullableWithAggregatesFilter<"User"> | string | null
     email?: StringWithAggregatesFilter<"User"> | string
     role_id?: IntWithAggregatesFilter<"User"> | number
     created_by?: IntNullableWithAggregatesFilter<"User"> | number | null
@@ -3784,6 +3801,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -3809,6 +3827,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -3833,6 +3852,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3858,6 +3878,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -3883,6 +3904,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -3903,6 +3925,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3921,6 +3944,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -4171,6 +4195,7 @@ export namespace Prisma {
     first_name?: SortOrder
     last_name?: SortOrder
     kc_user_id?: SortOrder
+    matrix_name?: SortOrder
     email?: SortOrder
     role_id?: SortOrder
     created_by?: SortOrder
@@ -4200,6 +4225,7 @@ export namespace Prisma {
     first_name?: SortOrder
     last_name?: SortOrder
     kc_user_id?: SortOrder
+    matrix_name?: SortOrder
     email?: SortOrder
     role_id?: SortOrder
     created_by?: SortOrder
@@ -4221,6 +4247,7 @@ export namespace Prisma {
     first_name?: SortOrder
     last_name?: SortOrder
     kc_user_id?: SortOrder
+    matrix_name?: SortOrder
     email?: SortOrder
     role_id?: SortOrder
     created_by?: SortOrder
@@ -4778,6 +4805,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -4802,6 +4830,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -4831,6 +4860,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -4855,6 +4885,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -4884,6 +4915,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -4908,6 +4940,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     created_by?: number | null
     updated_by?: number | null
@@ -4952,6 +4985,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4976,6 +5010,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5010,6 +5045,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5034,6 +5070,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5077,6 +5114,7 @@ export namespace Prisma {
     first_name?: StringFilter<"User"> | string
     last_name?: StringFilter<"User"> | string
     kc_user_id?: StringFilter<"User"> | string
+    matrix_name?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
     role_id?: IntFilter<"User"> | number
     created_by?: IntNullableFilter<"User"> | number | null
@@ -5123,6 +5161,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -5147,6 +5186,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -5176,6 +5216,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -5200,6 +5241,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -5229,6 +5271,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -5253,6 +5296,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     updated_by?: number | null
@@ -5287,6 +5331,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     confirmed_at?: Date | string | null
     last_seen_at?: Date | string | null
@@ -5311,6 +5356,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -5445,6 +5491,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5469,6 +5516,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5503,6 +5551,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5527,6 +5576,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5628,6 +5678,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     created_by?: number | null
     updated_by?: number | null
@@ -5647,6 +5698,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5671,6 +5723,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
     updated_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5695,6 +5748,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
     updated_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5715,6 +5769,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     updated_by?: number | null
@@ -5735,6 +5790,7 @@ export namespace Prisma {
     first_name: string
     last_name: string
     kc_user_id: string
+    matrix_name?: string | null
     email: string
     role_id: number
     created_by?: number | null
@@ -5772,6 +5828,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5796,6 +5853,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     updated_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5820,6 +5878,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     updated_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5839,6 +5898,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     confirmed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     last_seen_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5863,6 +5923,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null
@@ -5887,6 +5948,7 @@ export namespace Prisma {
     first_name?: StringFieldUpdateOperationsInput | string
     last_name?: StringFieldUpdateOperationsInput | string
     kc_user_id?: StringFieldUpdateOperationsInput | string
+    matrix_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     role_id?: IntFieldUpdateOperationsInput | number
     created_by?: NullableIntFieldUpdateOperationsInput | number | null

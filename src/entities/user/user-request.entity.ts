@@ -22,3 +22,20 @@ export class UserCreateParams {
   @ApiProperty()
   role_id: number;
 }
+
+export class UserUpdateParams {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  first_name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  last_name: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty()
+  role_id: number;
+}

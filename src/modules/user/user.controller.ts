@@ -19,6 +19,8 @@ import {
   Post,
   Body,
   Query,
+  Put,
+  Param,
 } from '@nestjs/common';
 
 import {
@@ -35,7 +37,10 @@ import {
 } from '@nestjs/swagger';
 import { GetCurrentUser } from 'src/common/decorators';
 import activityLogger from 'src/config/activity-logger';
-import { UserCreateParams } from 'src/entities/user/user-request.entity';
+import {
+  UserCreateParams,
+  UserUpdateParams,
+} from 'src/entities/user/user-request.entity';
 import { UserInstance } from 'src/dto/user.dto';
 
 @ApiTags('user')
@@ -87,6 +92,29 @@ export class UserController {
       .then((user) => {
         activityLogger.log(currentUser, user, 'user', 'created');
         reply.code(HttpStatus.CREATED).send(user);
+      })
+      .catch((error) => {
+        reply.send(error);
+      });
+  }
+
+  @Put(':id')
+  @ApiCreatedResponse({
+    description: 'update user',
+    schema: createUserOpts,
+  })
+  update(
+    @Res() reply: FastifyReply,
+    @Body() body: UserUpdateParams,
+    @Param() params: { id: number },
+    @GetCurrentUser() currentUser: UserInstance,
+  ) {
+    console.log('query.id, ', params.id);
+    return this.userService
+      .update(Number(params.id), body, currentUser)
+      .then((user) => {
+        activityLogger.log(currentUser, user, 'user', 'updated');
+        reply.code(HttpStatus.OK).send(user);
       })
       .catch((error) => {
         reply.send(error);

@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-    output = "./generated/client1"
+  output   = "./generated/client1"
 }
 
 datasource db {
@@ -31,6 +31,7 @@ model User {
   first_name         String    @db.VarChar(100)
   last_name          String    @db.VarChar(100)
   kc_user_id         String    @db.VarChar()
+  matrix_name        String?   @db.VarChar()
   email              String    @db.VarChar(255)
   Role               Role?     @relation(fields: [role_id], references: [id])
   role_id            Int       @db.Integer()
